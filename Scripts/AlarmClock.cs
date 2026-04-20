@@ -17,7 +17,7 @@ public class AlarmClock : MonoBehaviour
     {
         Debug.Log("Alarm off");
 
-        gameObject.SetActive(false);
+        GetComponent<AudioSource>().Stop();
 
         PlayerAction.Instance.Disable();
 

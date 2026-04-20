@@ -31,6 +31,7 @@ public class SequenceController : MonoBehaviour
 
     IEnumerator PlayCutscene(PlayableDirector d)
     {
+        Camera.main.GetComponent<CameraFollow>().enabled = true;
         PlayerAction.Instance.Lock();
         PlayerAction.Instance.Clear();
 
@@ -54,10 +55,19 @@ public class SequenceController : MonoBehaviour
 
     IEnumerator Gameplay()
     {
+        Camera.main.GetComponent<CameraFollow>().enabled = false;
+        var player = G.Get<PlayerController>();
+
+        if (player != null)
+            player.enabled = true;
+
         PlayerAction.Instance.Unlock();
 
-        var player = G.Get<PlayerController>();
-        if (player) player.enabled = true;
+        // 💣 важно: сброс физики
+        var rb = player.GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.WakeUp();
 
         _waitingGameplay = true;
 
